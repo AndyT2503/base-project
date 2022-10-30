@@ -1,0 +1,20 @@
+<div class="login-container">
+  <div class="login-form">
+    <h3>Login</h3>
+    <form nz-form [formGroup]="loginForm">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please input username!">
+          <nz-form-label nzRequired>Username</nz-form-label>
+          <input type="text" nz-input formControlName="username" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please input your Password!">
+          <nz-form-label nzRequired>Password</nz-form-label>
+          <input  type="password" nz-input formControlName="password" />
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    <button (click)="submit()" nzType="primary" class="login-btn" nz-button>Login</button>
+  </div>
+</div>

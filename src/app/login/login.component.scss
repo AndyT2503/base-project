@@ -1,0 +1,18 @@
+.login-container {
+  background:#eee url('../../assets/background/bg-transparent.png') top center no-repeat;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .login-form {
+    height: 441px;
+    width: 376px;
+    background-color: white;
+    padding: 64px 32px;
+
+    .login-btn {
+      width: 100%;
+    }
+  }
+}

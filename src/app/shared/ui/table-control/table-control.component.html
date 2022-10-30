@@ -1,0 +1,146 @@
+<nz-table
+  #basicTable
+  nzFrontPagination="false"
+  nzShowSizeChanger
+  [nzData]="(vm$ | async)?.items!"
+  [nzTotal]="(vm$ | async)?.totalCount!"
+  [nzPageIndex]="(vm$ | async)?.pageIndex!"
+  [nzPageSize]="(vm$ | async)?.pageSize!"
+  (nzQueryParams)="onQueryParamsChange($event)"
+  [nzScroll]="tableConfig.scrollConfig!"
+  [nzLoading]="(vm$ | async)?.isLoading"
+>
+  <thead>
+    <tr>
+      <ng-container
+        *ngFor="let item of tableConfig.columnConfig; let i = index"
+      >
+        <th
+          *ngIf="item.canFilter"
+          [nzSortFn]="item.canSort!"
+          [nzColumnKey]="getColumnKey(item.key)"
+          nzCustomFilter
+          [nzAlign]="item.align || null"
+          [nzWidth]="item.width || ''"
+        >
+          {{ item.label }}
+          <nz-filter-trigger
+            [(nzVisible)]="item.visibleFilter!"
+            [nzActive]="!!item.model"
+            [nzDropdownMenu]="menu"
+          >
+            <i nz-icon nzType="filter" nzTheme="outline"></i>
+          </nz-filter-trigger>
+        </th>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <div class="ant-table-filter-dropdown">
+            <div class="search-box">
+              <input
+                *ngIf="item.type === 'text'"
+                type="text"
+                nz-input
+                [placeholder]="item.label"
+                [(ngModel)]="item.model"
+              />
+              <nz-select
+                *ngIf="item.type === 'select'"
+                [(ngModel)]="item.model"
+              >
+                <nz-option
+                  *ngFor="let option of item.dataSource"
+                  [nzValue]="option.value"
+                  [nzLabel]="option.label"
+                ></nz-option>
+              </nz-select>
+              <button
+                nz-button
+                nzSize="small"
+                nzType="primary"
+                (click)="onSearch()"
+                class="search-button"
+              >
+                Search
+              </button>
+              <button nz-button nzSize="small" (click)="reset(i)">Reset</button>
+            </div>
+          </div>
+        </nz-dropdown-menu>
+        <th
+          *ngIf="!item.canFilter"
+          [nzSortFn]="item.canSort!"
+          [nzColumnKey]="getColumnKey(item.key)"
+          [nzAlign]="item.align || null"
+          [nzWidth]="item.width || ''"
+        >
+          {{ item.label }}
+        </th>
+      </ng-container>
+      <th nzAlign="center" *ngIf="tableConfig.showCommand">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let data of basicTable.data"
+      [ngClass]="{
+        'disable-row': tableConfig.disabledRow && tableConfig.disabledRow(data)
+      }"
+    >
+      <ng-container
+        *ngFor="let item of tableConfig.columnConfig; let i = index"
+      >
+        <td
+          (click)="item.onClick && item.onClick(data)"
+          *ngIf="item.type !== 'date' && item.type !== 'number'"
+          [nzAlign]="item.align || null"
+          [ngClass]="{ link: item.onClick }"
+        >
+          {{ data[item.key] }}
+        </td>
+        <td
+          (click)="item.onClick && item.onClick(data)"
+          *ngIf="item.type === 'date'"
+          [nzAlign]="item.align || null"
+          [ngClass]="{ link: item.onClick }"
+        >
+          {{ data[item.key] | date: item.format }}
+        </td>
+        <td
+          (click)="item.onClick && item.onClick(data)"
+          *ngIf="item.type === 'number'"
+          [nzAlign]="item.align || null"
+          [ngClass]="{ link: item.onClick }"
+        >
+          {{ data[item.key] | number: item.format }}
+        </td>
+      </ng-container>
+      <td class="action" *ngIf="tableConfig.showCommand">
+        <ng-container *ngFor="let command of tableConfig.commandConfig">
+          <ng-container *ngIf="!command.hidden || !command.hidden(data)">
+            <a
+              *ngIf="command.haveConfirm; else notConfirm"
+              nz-tooltip
+              nz-button
+              [disabled]="command.disableField && data[command.disableField]"
+              [nzTooltipTitle]="command.tooltip"
+              nz-popconfirm
+              [nzPopconfirmTitle]="command.confirmText"
+              nzPopconfirmPlacement="bottom"
+              (nzOnConfirm)="command.onClick!(data)"
+              ><i nz-icon [nzType]="command.icon" nzTheme="outline"></i
+            ></a>
+            <ng-template #notConfirm>
+              <a
+                nz-tooltip
+                nz-button
+                [disabled]="command.disableField && data[command.disableField]"
+                [nzTooltipTitle]="command.tooltip"
+                (click)="command.onClick!(data)"
+                ><i nz-icon [nzType]="command.icon" nzTheme="outline"></i
+              ></a>
+            </ng-template>
+          </ng-container>
+        </ng-container>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

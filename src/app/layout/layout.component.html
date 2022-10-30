@@ -1,0 +1,74 @@
+<nz-layout>
+  <nz-sider
+    nzCollapsible
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null"
+    nzWidth="200px"
+  >
+    <div class="logo"></div>
+    <ul class="menu" nz-menu nzTheme="dark" nzMode="inline">
+      <ng-container *ngFor="let item of menuList">
+        <li
+          *ngIf="!item.children || item.children?.length === 0; else subMenu"
+          nz-menu-item
+          [routerLink]="item.link"
+          routerLinkActive="active-link"
+          nz-tooltip
+          [nzTooltipTitle]="isCollapsed ? item.title : ''"
+        >
+          <i nz-icon [nzType]="item.icon"></i><span>{{ item.title }}</span>
+        </li>
+        <ng-template #subMenu>
+          <li nzOpen nz-submenu [nzTitle]="item.title" [nzIcon]="item.icon">
+            <ul>
+              <ng-container *ngFor="let subMenu of item.children">
+                <li
+                  nz-menu-item
+                  [routerLink]="subMenu.link"
+                  routerLinkActive="active-link"
+                >
+                <span>{{ subMenu.title }}</span>
+                </li>
+              </ng-container>
+            </ul>
+          </li>
+        </ng-template>
+      </ng-container>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <i
+        class="trigger"
+        nz-icon
+        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+        (click)="isCollapsed = !isCollapsed"
+      ></i>
+      <div
+        class="user"
+        nzTrigger="click"
+        nzPlacement="bottomCenter"
+        nz-dropdown
+        [nzDropdownMenu]="menu"
+      >
+        <nz-avatar nzIcon="user"></nz-avatar>
+        <h3>{{ username$ | async }}</h3>
+      </div>
+      <nz-dropdown-menu #menu="nzDropdownMenu">
+        <ul nz-menu>
+          <li nz-menu-item (click)="logout()">
+            <i class="icon" nz-icon nzType="logout" nzTheme="outline"></i>Logout
+          </li>
+        </ul>
+      </nz-dropdown-menu>
+    </nz-header>
+    <div class="header-title">
+      <h3>{{ routeTitle$ | async }}</h3>
+    </div>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

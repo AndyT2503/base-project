@@ -1,0 +1,37 @@
+.search-box {
+  padding: 8px;
+}
+
+.search-box input,
+.search-box nz-select {
+  width: 188px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.search-box button {
+  width: 90px;
+}
+
+.search-button {
+  margin-right: 8px;
+}
+
+.action {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+
+.link {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #1890ff;
+}
+
+.disable-row {
+  background-color: #f4f4f4;
+  pointer-events: none;
+  opacity: 0.4;
+}
