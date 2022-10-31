@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { PagingModel } from '../../models';
+import { PagingModel } from '../../data-access/api/models';
 
 export interface ViewModel<T> extends PagingModel<T> {
   isLoading?: boolean;
