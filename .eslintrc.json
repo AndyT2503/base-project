@@ -19,22 +19,52 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
+        "semi": "off",
+        "@typescript-eslint/semi": ["error"],
+        "@angular-eslint/component-selector": [
+          "warn",
+          {
+            "type": "element",
+            "prefix": "app",
+            "style": "kebab-case"
+          }
+        ],
         "@angular-eslint/directive-selector": [
-          "error",
+          "warn",
           {
             "type": "attribute",
             "prefix": "app",
             "style": "camelCase"
           }
         ],
-        "@angular-eslint/component-selector": [
+        "@angular-eslint/no-output-on-prefix": "off",
+        "@typescript-eslint/naming-convention": [
           "error",
           {
-            "type": "element",
-            "prefix": "app",
-            "style": "kebab-case"
+            "selector": "default",
+            "format": ["camelCase"],
+            "leadingUnderscore": "allow",
+            "trailingUnderscore": "allow"
+          },
+
+          {
+            "selector": "variable",
+            "format": ["camelCase", "UPPER_CASE", "PascalCase"],
+            "leadingUnderscore": "allow",
+            "trailingUnderscore": "allow"
+          },
+          {
+            "selector": "typeLike",
+            "format": ["PascalCase"]
+          },
+          {
+            "selector": "enumMember",
+            "format": ["camelCase", "PascalCase"]
           }
-        ]
+        ],
+        "typescript-eslint/quotes": "off",
+        "no-underscore-dangle": "off",
+        "radix": "off"
       }
     },
     {
