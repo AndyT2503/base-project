@@ -1,7 +1,7 @@
 import { ComponentStore } from '@ngrx/component-store';
 import { filter } from 'rxjs';
 import { DEFAULT_PAGE_INDEX } from '../const';
-import { PagingModel } from '../models';
+import { PagingModel } from '../data-access/api/models';
 
 export interface TableState<T> extends PagingModel<T> {
   sortName?: string;
