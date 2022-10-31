@@ -20,7 +20,7 @@ export class RemoveUndefinedQueryParamsInterceptor implements HttpInterceptor {
         string,
         Array<string>
       >) {
-        const paramValues = value.filter((item) => item !== 'undefined');
+        const paramValues = value.filter((item) => item !== 'undefined' && item !== 'null');
         paramValues.forEach((i) => {
           paramsObject[key] = i;
         });
