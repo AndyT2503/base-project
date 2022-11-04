@@ -15,15 +15,17 @@ export class RemoveUndefinedQueryParamsInterceptor implements HttpInterceptor {
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
     if (request.url.includes('api/') && request.method === 'GET') {
-      const paramsObject: Record<string, string> = {};
+      const paramsObject: Record<string, string | string[]> = {};
       for (let [key, value] of request.params['map'] as Map<
         string,
         Array<string>
       >) {
         const paramValues = value.filter((item) => item !== 'undefined' && item !== 'null');
-        paramValues.forEach((i) => {
-          paramsObject[key] = i;
-        });
+        if (paramValues.length > 1) {
+          paramsObject[key] = paramValues;
+        } else {
+          paramsObject[key] = paramValues[0];
+        }
       }
       const reqClone = request.clone({
         params: new HttpParams({
