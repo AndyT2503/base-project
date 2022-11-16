@@ -38,7 +38,7 @@ export class AppComponent {
               loadComponent: () =>
                 import('./login/login.component').then((c) => c.LoginComponent),
               title: 'Sign in',
-              canActivate: [NonAuthGuard],
+              canMatch: [NonAuthGuard]
             },
             {
               path: '',
