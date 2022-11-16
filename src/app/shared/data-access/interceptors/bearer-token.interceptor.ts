@@ -30,7 +30,9 @@ export class BearerTokenInterceptor implements HttpInterceptor {
   private readonly authService = inject(AuthService);
   private readonly authStore = inject(AuthStore);
   private isRefreshing = false;
-  private refreshTokenRequest$ = new BehaviorSubject<User | null>(null);
+  private refreshTokenRequest$ = new BehaviorSubject<
+    User | HttpErrorResponse | null
+  >(null);
 
   intercept(
     request: HttpRequest<any>,
@@ -55,7 +57,7 @@ export class BearerTokenInterceptor implements HttpInterceptor {
             if (!user || !user.refreshToken) {
               return throwError(() => error);
             }
-            return this.handle401Error(request, next, user.refreshToken);
+            return this.handle401Error(request, next, user.refreshToken, error);
           } else {
             return throwError(() => error);
           }
@@ -69,6 +71,7 @@ export class BearerTokenInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler,
     refreshToken: string,
+    error: HttpErrorResponse,
   ): Observable<HttpEvent<any>> {
     if (!this.isRefreshing) {
       this.isRefreshing = true;
@@ -85,6 +88,10 @@ export class BearerTokenInterceptor implements HttpInterceptor {
         finalize(() => {
           this.isRefreshing = false;
         }),
+        catchError((err: HttpErrorResponse) => {
+          this.refreshTokenRequest$.next(err);
+          return throwError(() => err);
+        }),
         switchMap((res) => {
           this.refreshTokenRequest$.next(res);
           return this.addTokenToRequest(request, next, res.token);
@@ -94,7 +101,13 @@ export class BearerTokenInterceptor implements HttpInterceptor {
       return this.refreshTokenRequest$.pipe(
         filter((x) => !!x),
         take(1),
-        switchMap((res) => this.addTokenToRequest(request, next, res!.token)),
+        switchMap((res) => {
+          if (res instanceof HttpErrorResponse) {
+            return throwError(() => error);
+          } else {
+            return this.addTokenToRequest(request, next, res!.token);
+          }
+        }),
       );
     }
   }
