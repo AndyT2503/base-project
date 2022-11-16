@@ -1,7 +1,7 @@
 import { registerLocaleData } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import en from '@angular/common/locales/en';
-import { Component, importProvidersFrom } from '@angular/core';
+import { Component, importProvidersFrom, inject, OnInit } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -17,6 +17,7 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
 import { TitleStrategyService } from './layout/services/title-strategy.service';
 import { AuthGuard, NonAuthGuard } from './shared/data-access/guards';
 import { interceptorProviders } from './shared/data-access/interceptors';
+import { AuthStore } from './shared/data-access/store/auth.store';
 
 registerLocaleData(en);
 
@@ -26,7 +27,12 @@ registerLocaleData(en);
   standalone: true,
   imports: [RouterModule],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  private readonly authStore = inject(AuthStore);
+
+  ngOnInit(): void {
+    this.authStore.init();
+  }
 
   static bootstrap() {
     bootstrapApplication(this, {

@@ -41,6 +41,10 @@ export class AuthStore extends ComponentStore<AuthState> {
     super(initialAuthState);
   }
 
+  init(): void {
+    this.refresh();
+  }
+
   private readonly refresh = this.effect<void>(
     switchMap(() => {
       const user = this.localStorageService.getItem<User>(StorageKey.User);

@@ -24,7 +24,9 @@ export class RemoveUndefinedQueryParamsInterceptor implements HttpInterceptor {
         if (paramValues.length > 1) {
           paramsObject[key] = paramValues;
         } else {
-          paramsObject[key] = paramValues[0];
+          if (paramValues[0]) {
+            paramsObject[key] = paramValues[0];
+          }
         }
       }
       const reqClone = request.clone({
