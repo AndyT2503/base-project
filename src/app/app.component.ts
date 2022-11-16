@@ -27,12 +27,7 @@ registerLocaleData(en);
   standalone: true,
   imports: [RouterModule],
 })
-export class AppComponent implements OnInit {
-  private readonly authStore = inject(AuthStore);
-
-  ngOnInit(): void {
-    this.authStore.init();
-  }
+export class AppComponent {
 
   static bootstrap() {
     bootstrapApplication(this, {
