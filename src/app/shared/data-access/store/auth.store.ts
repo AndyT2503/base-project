@@ -10,7 +10,6 @@ import { AuthService } from '../api/services';
 import { LocalStorageService } from './local-stogage.service';
 
 interface JWT {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   unique_name: string;
   nbf: number;
   exp: number;
@@ -36,7 +35,7 @@ export class AuthStore extends ComponentStore<AuthState> {
   constructor(
     private authService: AuthService,
     private localStorageService: LocalStorageService,
-    private router: Router,
+  private router: Router,
     private nzMessage: NzMessageService
   ) {
     super(initialAuthState);

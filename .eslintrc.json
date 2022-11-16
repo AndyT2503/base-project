@@ -42,14 +42,14 @@
           "error",
           {
             "selector": "default",
-            "format": ["camelCase"],
+            "format": ["camelCase", "snake_case"],
             "leadingUnderscore": "allow",
             "trailingUnderscore": "allow"
           },
 
           {
             "selector": "variable",
-            "format": ["camelCase", "UPPER_CASE", "PascalCase"],
+            "format": ["camelCase", "UPPER_CASE", "PascalCase", "snake_case"],
             "leadingUnderscore": "allow",
             "trailingUnderscore": "allow"
           },
@@ -59,7 +59,7 @@
           },
           {
             "selector": "enumMember",
-            "format": ["camelCase", "PascalCase"]
+            "format": ["PascalCase"]
           }
         ],
         "typescript-eslint/quotes": "off",
