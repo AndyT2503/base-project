@@ -4,7 +4,7 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
-  HttpStatusCode,
+  HttpStatusCode
 } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
@@ -16,7 +16,7 @@ import {
   switchMap,
   take,
   tap,
-  throwError,
+  throwError
 } from 'rxjs';
 import { StorageKey } from '../../const';
 import { User } from '../api/models';
@@ -30,9 +30,7 @@ export class BearerTokenInterceptor implements HttpInterceptor {
   private readonly authService = inject(AuthService);
   private readonly authStore = inject(AuthStore);
   private isRefreshing = false;
-  private refreshTokenRequest$ = new BehaviorSubject<
-    User | HttpErrorResponse | null
-  >(null);
+  private refreshTokenRequest$ = new BehaviorSubject<User | null>(null);
 
   intercept(
     request: HttpRequest<any>,
@@ -89,8 +87,8 @@ export class BearerTokenInterceptor implements HttpInterceptor {
           this.isRefreshing = false;
         }),
         catchError((err: HttpErrorResponse) => {
-          this.refreshTokenRequest$.next(err);
-          return throwError(() => err);
+          this.refreshTokenRequest$.error(err);
+          return throwError(() => error);
         }),
         switchMap((res) => {
           this.refreshTokenRequest$.next(res);
@@ -101,12 +99,11 @@ export class BearerTokenInterceptor implements HttpInterceptor {
       return this.refreshTokenRequest$.pipe(
         filter((x) => !!x),
         take(1),
+        catchError(() => {
+          return throwError(() => error);
+        }),
         switchMap((res) => {
-          if (res instanceof HttpErrorResponse) {
-            return throwError(() => error);
-          } else {
-            return this.addTokenToRequest(request, next, res!.token);
-          }
+          return this.addTokenToRequest(request, next, res!.token);
         }),
       );
     }
