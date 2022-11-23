@@ -75,6 +75,7 @@ export class BearerTokenInterceptor implements HttpInterceptor {
       this.isRefreshing = true;
       this.refreshTokenRequest$.next(null);
       return this.authService.refreshToken(refreshToken).pipe(
+        take(1),
         tap({
           next: (res) => {
             this.authStore.updateCurrentUser(res);
