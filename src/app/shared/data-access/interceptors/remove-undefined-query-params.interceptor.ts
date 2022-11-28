@@ -24,7 +24,7 @@ export class RemoveUndefinedQueryParamsInterceptor implements HttpInterceptor {
         if (paramValues.length > 1) {
           paramsObject[key] = paramValues;
         } else {
-          if (paramValues[0]) {
+          if (paramValues[0] !== undefined) {
             paramsObject[key] = paramValues[0];
           }
         }
