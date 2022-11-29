@@ -49,8 +49,8 @@ export class BearerTokenInterceptor implements HttpInterceptor {
           if (
             error instanceof HttpErrorResponse &&
             error.status === HttpStatusCode.Unauthorized &&
-            !request.url.includes('user/login') &&
-            !request.url.includes('user/refresh-token')
+            !request.url.includes('/login') &&
+            !request.url.includes('/refresh-token')
           ) {
             const user = this.storageService.getItem<User>(StorageKey.User);
             if (!user || !user.refreshToken) {

@@ -20,7 +20,9 @@ export class RemoveUndefinedQueryParamsInterceptor implements HttpInterceptor {
         string,
         Array<string>
       >) {
-        const paramValues = value.filter((item) => item !== 'undefined' && item !== 'null');
+        const paramValues = value.filter(
+          (item) => `${item}` !== 'null' && `${item}` !== 'undefined',
+        );
         if (paramValues.length > 1) {
           paramsObject[key] = paramValues;
         } else {
@@ -31,7 +33,7 @@ export class RemoveUndefinedQueryParamsInterceptor implements HttpInterceptor {
       }
       const reqClone = request.clone({
         params: new HttpParams({
-          fromObject: paramsObject
+          fromObject: paramsObject,
         }),
       });
       return next.handle(reqClone);
