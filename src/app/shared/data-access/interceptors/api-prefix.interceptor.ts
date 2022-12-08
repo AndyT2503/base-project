@@ -1,16 +1,21 @@
 import {
-  HttpEvent, HttpHandler, HttpInterceptor, HttpRequest,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
-
-const env = environment;
+import { injectAppConfig } from '../../config/config.di';
 
 export class ApiPrefixInterceptor implements HttpInterceptor {
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  private readonly appConfig = injectAppConfig();
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler,
+  ): Observable<HttpEvent<any>> {
     if (!req.url.includes('http')) {
       const reqClone = req.clone({
-        url: `${env.apiUrl}/${req.url}`,
+        url: `${this.appConfig.apiUrl}/${req.url}`,
       });
       return next.handle(reqClone);
     }
