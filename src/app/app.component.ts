@@ -1,16 +1,16 @@
 import { registerLocaleData } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import en from '@angular/common/locales/en';
-import { Component, importProvidersFrom, inject, OnInit } from '@angular/core';
+import { Component, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   PreloadAllModules,
   provideRouter,
-  RouterModule,
+  RouterOutlet,
   TitleStrategy,
   withInMemoryScrolling,
-  withPreloading
+  withPreloading,
 } from '@angular/router';
 import { en_US, NZ_I18N } from 'ng-zorro-antd/i18n';
 import { NzMessageModule } from 'ng-zorro-antd/message';
@@ -19,7 +19,6 @@ import { provideAppConfig } from './shared/config/config.di';
 import { AppConfig } from './shared/config/config.model';
 import { AuthGuard, NonAuthGuard } from './shared/data-access/guards';
 import { interceptorProviders } from './shared/data-access/interceptors';
-import { AuthStore } from './shared/data-access/store/auth.store';
 
 registerLocaleData(en);
 
@@ -27,15 +26,9 @@ registerLocaleData(en);
   selector: 'app-root',
   template: '<router-outlet></router-outlet>',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterOutlet],
 })
-export class AppComponent implements OnInit {
-  private readonly authStore = inject(AuthStore);
-
-  ngOnInit(): void {
-    this.authStore.init();
-  }
-
+export class AppComponent {
   static bootstrap(config: AppConfig) {
     bootstrapApplication(this, {
       providers: [
@@ -46,13 +39,13 @@ export class AppComponent implements OnInit {
               loadComponent: () =>
                 import('./login/login.component').then((c) => c.LoginComponent),
               title: 'Sign in',
-              canMatch: [NonAuthGuard]
+              canMatch: [NonAuthGuard],
             },
             {
               path: '',
               loadComponent: () =>
                 import('./layout/layout.component').then(
-                  (c) => c.LayoutComponent
+                  (c) => c.LayoutComponent,
                 ),
               loadChildren: () =>
                 import('./layout/layout.routes').then((m) => m.layoutRoutes),
@@ -63,9 +56,13 @@ export class AppComponent implements OnInit {
           withPreloading(PreloadAllModules),
           withInMemoryScrolling({
             scrollPositionRestoration: 'top',
-          })
+          }),
         ),
-        importProvidersFrom(BrowserAnimationsModule, HttpClientModule, NzMessageModule),
+        importProvidersFrom(
+          BrowserAnimationsModule,
+          HttpClientModule,
+          NzMessageModule,
+        ),
         { provide: NZ_I18N, useValue: en_US },
         {
           provide: TitleStrategy,
