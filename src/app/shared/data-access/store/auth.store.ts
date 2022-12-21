@@ -31,7 +31,7 @@ const initialAuthState: AuthState = {
   isAuthenticated: false,
 };
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class AuthStore
   extends ComponentStore<AuthState>
   implements OnStoreInit, OnStateInit

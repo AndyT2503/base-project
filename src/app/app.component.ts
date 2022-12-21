@@ -12,6 +12,7 @@ import {
   withInMemoryScrolling,
   withPreloading,
 } from '@angular/router';
+import { provideComponentStore } from '@ngrx/component-store';
 import { en_US, NZ_I18N } from 'ng-zorro-antd/i18n';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { TitleStrategyService } from './layout/services/title-strategy.service';
@@ -19,6 +20,7 @@ import { provideAppConfig } from './shared/config/config.di';
 import { AppConfig } from './shared/config/config.model';
 import { AuthGuard, NonAuthGuard } from './shared/data-access/guards';
 import { interceptorProviders } from './shared/data-access/interceptors';
+import { AuthStore } from './shared/data-access/store/auth.store';
 
 registerLocaleData(en);
 
@@ -69,6 +71,7 @@ export class AppComponent {
           useClass: TitleStrategyService,
         },
         provideAppConfig(config),
+        provideComponentStore(AuthStore),
         ...interceptorProviders,
       ],
     }).catch((err) => console.error(err));
