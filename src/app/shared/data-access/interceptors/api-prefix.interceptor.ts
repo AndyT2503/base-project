@@ -4,9 +4,11 @@ import {
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { injectAppConfig } from '../../config/config.di';
 
+@Injectable()
 export class ApiPrefixInterceptor implements HttpInterceptor {
   private readonly appConfig = injectAppConfig();
   intercept(
