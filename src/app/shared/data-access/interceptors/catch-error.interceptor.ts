@@ -19,8 +19,8 @@ export class CatchErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((err) => {
-        if (err instanceof HttpErrorResponse && err.error.message) {
-          this.nzMessage.error(err.error.message || 'Đã có lỗi ở server');
+        if (err instanceof HttpErrorResponse) {
+          this.nzMessage.error(err.error.detail || 'Đã có lỗi ở server');
         }
         return throwError(() => err);
       }),
