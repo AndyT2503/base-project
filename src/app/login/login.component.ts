@@ -15,8 +15,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { TypedFormGroup } from 'src/app/shared/utils';
-import { UserLogin } from '../shared/data-access/api/models';
-import { AuthStore } from '../shared/data-access/store/auth.store';
+import { AuthStore, UserLoginRequest } from '../shared/data-access/store/auth.store';
 
 const nzModules = [
   NzFormModule,
@@ -34,7 +33,7 @@ const nzModules = [
 })
 export class LoginComponent {
   private readonly authStore = inject(AuthStore);
-  loginForm: TypedFormGroup<UserLogin> = new FormGroup({
+  loginForm: TypedFormGroup<UserLoginRequest> = new FormGroup({
     username: new FormControl('', {
       validators: Validators.required,
       nonNullable: true,

@@ -5,20 +5,18 @@ import {
   ComponentStore,
   OnStateInit,
   OnStoreInit,
-  tapResponse
+  tapResponse,
 } from '@ngrx/component-store';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { of, switchMap, tap } from 'rxjs';
 import { StorageKey } from '../../const';
-import { User, UserLogin } from '../api/models';
+import { User } from '../api/models';
 import { AuthService } from '../api/services';
 import { LocalStorageService } from './local-stogage.service';
 
-interface JWT {
-  unique_name: string;
-  nbf: number;
-  exp: number;
-  iat: number;
+export interface UserLoginRequest {
+  username: string;
+  password: string;
 }
 
 interface AuthState {
@@ -64,7 +62,7 @@ export class AuthStore
     }),
   );
 
-  readonly login = this.effect<UserLogin>(
+  readonly login = this.effect<UserLoginRequest>(
     switchMap((userLogin) =>
       this.authService.login(userLogin.username, userLogin.password).pipe(
         tapResponse(

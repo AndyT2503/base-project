@@ -3,9 +3,3 @@ export interface User {
   token: string;
   refreshToken: string;
 }
-
-
-export interface UserLogin {
-  username: string;
-  password: string;
-}
