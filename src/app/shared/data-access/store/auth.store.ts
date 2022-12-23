@@ -37,7 +37,6 @@ export class AuthStore
   private readonly authService = inject(AuthService);
   private readonly localStorageService = inject(LocalStorageService);
   private readonly router = inject(Router);
-  private readonly nzMessage = inject(NzMessageService);
   readonly username$ = this.select((s) => s.user?.username);
   readonly isAuthenticated$ = this.select((s) => s.isAuthenticated);
   ngrxOnStoreInit() {
@@ -70,9 +69,7 @@ export class AuthStore
             this.router.navigate(['']);
             this.updateCurrentUser(response);
           },
-          (error: HttpErrorResponse) => {
-            this.nzMessage.error(error.error.detail);
-          },
+          () => {},
         ),
       ),
     ),
