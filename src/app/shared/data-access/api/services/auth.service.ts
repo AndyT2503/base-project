@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from '../models';
+import { UserLogin } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -9,15 +9,15 @@ import { User } from '../models';
 export class AuthService {
   private readonly httpClient = inject(HttpClient);
 
-  login(username: string, password: string): Observable<User> {
-    return this.httpClient.post<User>('api/user/login', {
+  login(username: string, password: string): Observable<UserLogin> {
+    return this.httpClient.post<UserLogin>('api/user/login', {
       username,
       password,
     });
   }
 
-  refreshToken(refreshToken: string): Observable<User> {
-    return this.httpClient.post<User>('api/user/refresh-token', {
+  refreshToken(refreshToken: string): Observable<UserLogin> {
+    return this.httpClient.post<UserLogin>('api/user/refresh-token', {
       refreshToken,
     });
   }

@@ -19,7 +19,7 @@ import {
   throwError
 } from 'rxjs';
 import { StorageKey } from '../../const';
-import { User } from '../api/models';
+import { UserLogin } from '../api/models';
 import { AuthService } from '../api/services';
 import { AuthStore } from '../store/auth.store';
 import { LocalStorageService } from '../store/local-stogage.service';
@@ -30,13 +30,13 @@ export class BearerTokenInterceptor implements HttpInterceptor {
   private readonly authService = inject(AuthService);
   private readonly authStore = inject(AuthStore);
   private isRefreshing = false;
-  private refreshTokenRequest$ = new BehaviorSubject<User | null>(null);
+  private refreshTokenRequest$ = new BehaviorSubject<UserLogin | null>(null);
 
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    const accessToken = this.storageService.getItem<User>(
+    const accessToken = this.storageService.getItem<UserLogin>(
       StorageKey.User,
     )?.token;
     if (
@@ -52,7 +52,7 @@ export class BearerTokenInterceptor implements HttpInterceptor {
             !request.url.includes('/login') &&
             !request.url.includes('/refresh-token')
           ) {
-            const user = this.storageService.getItem<User>(StorageKey.User);
+            const user = this.storageService.getItem<UserLogin>(StorageKey.User);
             if (!user || !user.refreshToken) {
               return throwError(() => error);
             }

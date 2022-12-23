@@ -10,7 +10,7 @@ import {
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { of, switchMap, tap } from 'rxjs';
 import { StorageKey } from '../../const';
-import { User } from '../api/models';
+import { UserLogin } from '../api/models';
 import { AuthService } from '../api/services';
 import { LocalStorageService } from './local-stogage.service';
 
@@ -20,7 +20,7 @@ export interface UserLoginRequest {
 }
 
 interface AuthState {
-  user: User | null;
+  user: UserLogin | null;
   isAuthenticated: boolean;
 }
 
@@ -50,7 +50,7 @@ export class AuthStore
 
   private readonly refresh = this.effect<void>(
     switchMap(() => {
-      const user = this.localStorageService.getItem<User>(StorageKey.User);
+      const user = this.localStorageService.getItem<UserLogin>(StorageKey.User);
       return of(user).pipe(
         tap((response) => {
           this.patchState({
@@ -86,7 +86,7 @@ export class AuthStore
     }),
   );
 
-  updateCurrentUser(response: User) {
+  updateCurrentUser(response: UserLogin) {
     this.patchState({
       user: response,
       isAuthenticated: !!response,
