@@ -4,6 +4,7 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
+  HttpStatusCode,
 } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -20,7 +21,13 @@ export class CatchErrorInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       catchError((err) => {
         if (err instanceof HttpErrorResponse) {
-          this.nzMessage.error(err.error?.detail || 'Đã có lỗi ở server');
+          if (err instanceof HttpErrorResponse) {
+            if (err.status !== HttpStatusCode.Unauthorized) {
+              this.nzMessage.error(
+                err.error?.detail || 'Some internal server error!',
+              );
+            }
+          }
         }
         return throwError(() => err);
       }),
