@@ -22,7 +22,10 @@ export class CatchErrorInterceptor implements HttpInterceptor {
       catchError((err) => {
         if (err instanceof HttpErrorResponse) {
           if (err instanceof HttpErrorResponse) {
-            if (err.status !== HttpStatusCode.Unauthorized) {
+            if (
+              err.status !== HttpStatusCode.Unauthorized ||
+              req.url.includes('login')
+            ) {
               this.nzMessage.error(
                 err.error?.detail || 'Some internal server error!',
               );
