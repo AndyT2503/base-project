@@ -20,7 +20,7 @@ export class CatchErrorInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       catchError((err) => {
         if (err instanceof HttpErrorResponse) {
-          this.nzMessage.error(err.error.detail || 'Đã có lỗi ở server');
+          this.nzMessage.error(err.error?.detail || 'Đã có lỗi ở server');
         }
         return throwError(() => err);
       }),
