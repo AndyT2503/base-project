@@ -1,6 +1,6 @@
 import { ComponentStore } from '@ngrx/component-store';
 import { filter } from 'rxjs';
-import { DEFAULT_PAGE_INDEX } from '../const';
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '../const';
 import { PagingModel } from '../data-access/api/models';
 
 export interface TableState<T> extends PagingModel<T> {
@@ -8,6 +8,13 @@ export interface TableState<T> extends PagingModel<T> {
   ascend?: boolean;
   isLoading?: boolean;
 }
+
+export const initialTableState: TableState<unknown> = {
+  items: [],
+  pageIndex: DEFAULT_PAGE_INDEX,
+  pageSize: DEFAULT_PAGE_SIZE,
+  totalCount: 0,
+};
 
 type UnpackState<TState> = TState extends TableState<infer U> ? U : {};
 
