@@ -26,7 +26,7 @@ const nzModules = [
   styleUrls: ['./layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LayoutComponent {
+export default class LayoutComponent {
 
   isCollapsed = false;
   private readonly authStore = inject(AuthStore);

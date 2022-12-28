@@ -31,7 +31,7 @@ const nzModules = [
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent {
+export default class LoginComponent {
   private readonly authStore = inject(AuthStore);
   loginForm: TypedFormGroup<UserLoginRequest> = new FormGroup({
     username: new FormControl('', {
