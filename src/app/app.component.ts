@@ -1,5 +1,5 @@
 import { registerLocaleData } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import en from '@angular/common/locales/en';
 import { Component, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
@@ -19,7 +19,12 @@ import { TitleStrategyService } from './layout/services/title-strategy.service';
 import { provideAppConfig } from './shared/config/config.di';
 import { AppConfig } from './shared/config/config.model';
 import { AuthGuard, NonAuthGuard } from './shared/data-access/guards';
-import { interceptorProviders } from './shared/data-access/interceptors';
+import {
+  apiPrefixInterceptor,
+  bearerTokenInterceptor,
+  catchErrorInterceptor,
+  removeUndefinedQueryParamsInterceptor,
+} from './shared/data-access/interceptors';
 import { AuthStore } from './shared/data-access/store/auth.store';
 
 registerLocaleData(en);
@@ -60,19 +65,22 @@ export class AppComponent {
             scrollPositionRestoration: 'top',
           }),
         ),
-        importProvidersFrom(
-          BrowserAnimationsModule,
-          HttpClientModule,
-          NzMessageModule,
-        ),
+        importProvidersFrom(BrowserAnimationsModule, NzMessageModule),
         { provide: NZ_I18N, useValue: en_US },
         {
           provide: TitleStrategy,
           useClass: TitleStrategyService,
         },
+        provideHttpClient(
+          withInterceptors([
+            apiPrefixInterceptor,
+            bearerTokenInterceptor,
+            removeUndefinedQueryParamsInterceptor,
+            catchErrorInterceptor,
+          ]),
+        ),
         provideAppConfig(config),
         provideComponentStore(AuthStore),
-        ...interceptorProviders,
       ],
     }).catch((err) => console.error(err));
   }

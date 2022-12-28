@@ -1,12 +1,12 @@
 import {
   HttpErrorResponse,
   HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
+  HttpHandlerFn,
+  HttpInterceptorFn,
   HttpRequest,
-  HttpStatusCode
+  HttpStatusCode,
 } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import {
   BehaviorSubject,
   catchError,
@@ -16,7 +16,7 @@ import {
   switchMap,
   take,
   tap,
-  throwError
+  throwError,
 } from 'rxjs';
 import { StorageKey } from '../../const';
 import { UserLogin } from '../api/models';
@@ -24,96 +24,64 @@ import { AuthService } from '../api/services';
 import { AuthStore } from '../store/auth.store';
 import { LocalStorageService } from '../store/local-storage.service';
 
-@Injectable()
-export class BearerTokenInterceptor implements HttpInterceptor {
-  private readonly storageService = inject(LocalStorageService);
-  private readonly authService = inject(AuthService);
-  private readonly authStore = inject(AuthStore);
-  private isRefreshing = false;
-  private refreshTokenRequest$ = new BehaviorSubject<UserLogin | null>(null);
+export const bearerTokenInterceptor: HttpInterceptorFn = (
+  request: HttpRequest<any>,
+  next: HttpHandlerFn,
+) => {
+  const storageService = inject(LocalStorageService);
+  const authService = inject(AuthService);
+  const authStore = inject(AuthStore);
+  const refreshTokenRequest$ = new BehaviorSubject<UserLogin | null>(null);
 
-  intercept(
+  let isRefreshing = false;
+  function handle401Error(
     request: HttpRequest<any>,
-    next: HttpHandler,
-  ): Observable<HttpEvent<any>> {
-    const accessToken = this.storageService.getItem<UserLogin>(
-      StorageKey.User,
-    )?.token;
-    if (
-      accessToken &&
-      request.url.includes('api/') &&
-      !request.headers.has('Authorization')
-    ) {
-      return this.addTokenToRequest(request, next, accessToken).pipe(
-        catchError((error) => {
-          if (
-            error instanceof HttpErrorResponse &&
-            error.status === HttpStatusCode.Unauthorized &&
-            !request.url.includes('/login') &&
-            !request.url.includes('/refresh-token')
-          ) {
-            const user = this.storageService.getItem<UserLogin>(StorageKey.User);
-            if (!user || !user.refreshToken) {
-              return throwError(() => error);
-            }
-            return this.handle401Error(request, next, user.refreshToken, error);
-          } else {
-            return throwError(() => error);
-          }
-        }),
-      );
-    }
-    return next.handle(request);
-  }
-
-  private handle401Error(
-    request: HttpRequest<any>,
-    next: HttpHandler,
+    next: HttpHandlerFn,
     refreshToken: string,
     error: HttpErrorResponse,
   ): Observable<HttpEvent<any>> {
-    if (!this.isRefreshing) {
-      this.isRefreshing = true;
-      this.refreshTokenRequest$.next(null);
-      return this.authService.refreshToken(refreshToken).pipe(
+    if (!isRefreshing) {
+      isRefreshing = true;
+      refreshTokenRequest$.next(null);
+      return authService.refreshToken(refreshToken).pipe(
         take(1),
         tap({
           next: (res) => {
-            this.authStore.updateCurrentUser(res);
+            authStore.updateCurrentUser(res);
           },
           error: () => {
-            this.authStore.logout();
+            authStore.logout();
           },
         }),
         finalize(() => {
-          this.isRefreshing = false;
+          isRefreshing = false;
         }),
         catchError((err: HttpErrorResponse) => {
-          this.refreshTokenRequest$.error(err);
+          refreshTokenRequest$.error(err);
           return throwError(() => error);
         }),
         switchMap((res) => {
-          this.refreshTokenRequest$.next(res);
-          return this.addTokenToRequest(request, next, res.token);
+          refreshTokenRequest$.next(res);
+          return addTokenToRequest(request, next, res.token);
         }),
       );
     } else {
-      return this.refreshTokenRequest$.pipe(
+      return refreshTokenRequest$.pipe(
         filter((x) => !!x),
         take(1),
         catchError(() => {
           return throwError(() => error);
         }),
         switchMap((res) => {
-          return this.addTokenToRequest(request, next, res!.token);
+          return addTokenToRequest(request, next, res!.token);
         }),
       );
     }
   }
 
-  private addTokenToRequest(
+  function addTokenToRequest(
     request: HttpRequest<any>,
-    next: HttpHandler,
+    next: HttpHandlerFn,
     accessToken: string,
   ): Observable<HttpEvent<any>> {
     const headers = request.headers.set(
@@ -123,6 +91,33 @@ export class BearerTokenInterceptor implements HttpInterceptor {
     const reqClone = request.clone({
       headers,
     });
-    return next.handle(reqClone);
+    return next(reqClone);
   }
-}
+
+  const accessToken = storageService.getItem<UserLogin>(StorageKey.User)?.token;
+  if (
+    accessToken &&
+    request.url.includes('api/') &&
+    !request.headers.has('Authorization')
+  ) {
+    return addTokenToRequest(request, next, accessToken).pipe(
+      catchError((error) => {
+        if (
+          error instanceof HttpErrorResponse &&
+          error.status === HttpStatusCode.Unauthorized &&
+          !request.url.includes('/login') &&
+          !request.url.includes('/refresh-token')
+        ) {
+          const user = storageService.getItem<UserLogin>(StorageKey.User);
+          if (!user || !user.refreshToken) {
+            return throwError(() => error);
+          }
+          return handle401Error(request, next, user.refreshToken, error);
+        } else {
+          return throwError(() => error);
+        }
+      }),
+    );
+  }
+  return next(request);
+};
