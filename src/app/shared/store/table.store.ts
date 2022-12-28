@@ -9,7 +9,7 @@ export interface TableState<T> extends PagingModel<T> {
   isLoading?: boolean;
 }
 
-export const initialTableState: TableState<unknown> = {
+export const initialTableState: TableState<any> = {
   items: [],
   pageIndex: DEFAULT_PAGE_INDEX,
   pageSize: DEFAULT_PAGE_SIZE,
