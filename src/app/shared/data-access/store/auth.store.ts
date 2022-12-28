@@ -12,7 +12,7 @@ import { of, switchMap, tap } from 'rxjs';
 import { StorageKey } from '../../const';
 import { UserLogin } from '../api/models';
 import { AuthService } from '../api/services';
-import { LocalStorageService } from './local-stogage.service';
+import { LocalStorageService } from './local-storage.service';
 
 export interface UserLoginRequest {
   username: string;

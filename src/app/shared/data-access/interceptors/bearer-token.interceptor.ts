@@ -22,7 +22,7 @@ import { StorageKey } from '../../const';
 import { UserLogin } from '../api/models';
 import { AuthService } from '../api/services';
 import { AuthStore } from '../store/auth.store';
-import { LocalStorageService } from '../store/local-stogage.service';
+import { LocalStorageService } from '../store/local-storage.service';
 
 @Injectable()
 export class BearerTokenInterceptor implements HttpInterceptor {
