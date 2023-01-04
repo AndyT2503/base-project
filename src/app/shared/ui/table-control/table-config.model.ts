@@ -16,13 +16,9 @@ export interface TableConfig<T> {
 
 export interface TableColumnConfig<T> {
   label: string;
-  type: 'text' | 'select' | 'date' | 'number';
-  visibleFilter?: boolean;
-  canFilter?: boolean;
+  type: 'text' | 'date' | 'number' | 'percent';
   canSort?: true;
-  dataSource?: Array<SelectOption>;
   filterKey?: string;
-  model?: unknown;
   key: keyof T & string;
   width?: string;
   align?: 'left' | 'right' | 'center';
@@ -38,11 +34,6 @@ export interface CommandConfig<T> {
   disableField?: keyof T & string;
   onClick?: (value: T) => void;
   hidden?: (value: T) => boolean;
-}
-
-interface SelectOption {
-  value: string;
-  label: string;
 }
 
 interface ScrollConfig {

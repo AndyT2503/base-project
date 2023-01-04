@@ -16,57 +16,6 @@
         *ngFor="let item of tableConfig.columnConfig; let i = index"
       >
         <th
-          *ngIf="item.canFilter"
-          [nzSortFn]="item.canSort!"
-          [nzColumnKey]="getColumnKey(item.key)"
-          nzCustomFilter
-          [nzAlign]="item.align || null"
-          [nzWidth]="item.width || ''"
-        >
-          {{ item.label }}
-          <nz-filter-trigger
-            [(nzVisible)]="item.visibleFilter!"
-            [nzActive]="!!item.model"
-            [nzDropdownMenu]="menu"
-          >
-            <i nz-icon nzType="filter" nzTheme="outline"></i>
-          </nz-filter-trigger>
-        </th>
-        <nz-dropdown-menu #menu="nzDropdownMenu">
-          <div class="ant-table-filter-dropdown">
-            <div class="search-box">
-              <input
-                *ngIf="item.type === 'text'"
-                type="text"
-                nz-input
-                [placeholder]="item.label"
-                [(ngModel)]="item.model"
-              />
-              <nz-select
-                *ngIf="item.type === 'select'"
-                [(ngModel)]="item.model"
-              >
-                <nz-option
-                  *ngFor="let option of item.dataSource"
-                  [nzValue]="option.value"
-                  [nzLabel]="option.label"
-                ></nz-option>
-              </nz-select>
-              <button
-                nz-button
-                nzSize="small"
-                nzType="primary"
-                (click)="onSearch()"
-                class="search-button"
-              >
-                Search
-              </button>
-              <button nz-button nzSize="small" (click)="reset(i)">Reset</button>
-            </div>
-          </div>
-        </nz-dropdown-menu>
-        <th
-          *ngIf="!item.canFilter"
           [nzSortFn]="item.canSort!"
           [nzColumnKey]="getColumnKey(item.key)"
           [nzAlign]="item.align || null"
@@ -102,7 +51,7 @@
           [nzAlign]="item.align || null"
           [ngClass]="{ link: item.onClick }"
         >
-          {{ data[item.key] | date: item.format }}
+          {{ data[item.key] | date : item.format }}
         </td>
         <td
           (click)="item.onClick && item.onClick(data)"
@@ -110,7 +59,15 @@
           [nzAlign]="item.align || null"
           [ngClass]="{ link: item.onClick }"
         >
-          {{ data[item.key] | number: item.format }}
+          {{ data[item.key] | number : item.format }}
+        </td>
+        <td
+          (click)="item.onClick && item.onClick(data)"
+          *ngIf="item.type === 'percent'"
+          [nzAlign]="item.align || null"
+          [ngClass]="{ link: item.onClick }"
+        >
+          {{ data[item.key] | percent : item.format }}
         </td>
       </ng-container>
       <td class="action" *ngIf="tableConfig.showCommand">
