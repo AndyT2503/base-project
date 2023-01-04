@@ -39,7 +39,7 @@
       >
         <td
           (click)="item.onClick && item.onClick(data)"
-          *ngIf="item.type !== 'date' && item.type !== 'number'"
+          *ngIf="item.type === 'text'"
           [nzAlign]="item.align || null"
           [ngClass]="{ link: item.onClick }"
         >
