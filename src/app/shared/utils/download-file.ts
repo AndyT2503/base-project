@@ -4,5 +4,4 @@ export function downloadFile(response: Blob, fileName: string): void {
   link.href = window.URL.createObjectURL(response);
   link.download = fileName;
   link.click();
-  link.remove();
 }
