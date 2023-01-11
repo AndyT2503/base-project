@@ -43,18 +43,15 @@ export class AppComponent {
           [
             {
               path: 'login',
-              loadComponent: () =>
-                import('./login/login.component'),
+              loadComponent: () => import('./login/login.component'),
               title: 'Sign in',
               canMatch: [NonAuthGuard],
             },
             {
               path: '',
-              loadComponent: () =>
-                import('./layout/layout.component'),
+              loadComponent: () => import('./layout/layout.component'),
               loadChildren: () =>
                 import('./layout/layout.routes').then((m) => m.layoutRoutes),
-              canLoad: [AuthGuard],
               canMatch: [AuthGuard],
             },
           ],

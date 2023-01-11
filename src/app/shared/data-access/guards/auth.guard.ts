@@ -1,20 +1,18 @@
 import { Injectable } from '@angular/core';
 import {
   CanActivate,
-  CanActivateChild,
-  CanLoad,
-  CanMatch,
+  CanActivateChild, CanMatch,
   Route,
   Router,
   UrlSegment,
-  UrlTree,
+  UrlTree
 } from '@angular/router';
 import { map, Observable, take } from 'rxjs';
 import { AuthStore } from '../store/auth.store';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard
-  implements CanActivate, CanLoad, CanActivateChild, CanMatch
+  implements CanActivate, CanActivateChild, CanMatch
 {
   constructor(private authStore: AuthStore, private router: Router) {}
   canMatch(
@@ -25,10 +23,6 @@ export class AuthGuard
     | UrlTree
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree> {
-    return this.isAuthenticated$();
-  }
-
-  canLoad(): Observable<boolean | UrlTree> {
     return this.isAuthenticated$();
   }
 
