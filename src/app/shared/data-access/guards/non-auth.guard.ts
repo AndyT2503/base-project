@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   CanActivate,
   CanMatch,
@@ -12,7 +12,9 @@ import { AuthStore } from '../store/auth.store';
 
 @Injectable({ providedIn: 'root' })
 export class NonAuthGuard implements CanActivate, CanMatch {
-  constructor(private authStore: AuthStore, private router: Router) {}
+  private readonly authStore = inject(AuthStore);
+  private readonly router = inject(Router);
+
   canMatch(
     route: Route,
     segments: UrlSegment[],
