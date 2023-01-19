@@ -8,4 +8,6 @@ class DestroyService extends Subject<void> implements OnDestroy {
   }
 }
 
-export const injectDestroyService = inject(DestroyService, { self: true });
+export function injectDestroyService() {
+  return inject(DestroyService, { self: true });
+}
