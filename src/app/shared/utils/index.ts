@@ -3,3 +3,4 @@ export * from './track-by';
 export * from './di';
 export * from './form-validators';
 export * from './download-file';
+export * from './destroy.service';
