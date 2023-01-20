@@ -2,6 +2,7 @@ import { ComponentStore } from '@ngrx/component-store';
 import { filter } from 'rxjs';
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '../const';
 import { PagingModel } from '../data-access/api/models';
+import { ComponentStoreWithSelectors, getSelectors } from '../utils';
 
 export interface TableState<T> extends PagingModel<T> {
   sortName?: string;
@@ -20,7 +21,7 @@ type UnpackState<TState> = TState extends TableState<infer U> ? U : {};
 
 export class TableStore<
   TState extends TableState<any>
-> extends ComponentStore<TState> {
+> extends ComponentStoreWithSelectors<TState> {
   readonly updateVm = this.updater((state, vm: PagingModel<UnpackState<TState>>) => ({
     ...state,
     items: vm.items,
