@@ -11,3 +11,7 @@ class DestroyService extends Subject<void> implements OnDestroy {
 export function injectDestroyService() {
   return inject(DestroyService, { self: true });
 }
+
+export function provideDestroyService() {
+  return DestroyService;
+}
