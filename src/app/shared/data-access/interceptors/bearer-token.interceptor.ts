@@ -4,7 +4,7 @@ import {
   HttpHandlerFn,
   HttpInterceptorFn,
   HttpRequest,
-  HttpStatusCode,
+  HttpStatusCode
 } from '@angular/common/http';
 import { inject } from '@angular/core';
 import {
@@ -16,7 +16,7 @@ import {
   switchMap,
   take,
   tap,
-  throwError,
+  throwError
 } from 'rxjs';
 import { StorageKey } from '../../const';
 import { UserLogin } from '../api/models';
@@ -44,24 +44,20 @@ export const bearerTokenInterceptor: HttpInterceptorFn = (
       isRefreshing = true;
       refreshTokenRequest$.next(null);
       return authService.refreshToken(refreshToken).pipe(
-        take(1),
         tap({
           next: (res) => {
+            refreshTokenRequest$.next(res);
             authStore.updateCurrentUser(res);
           },
-          error: () => {
+          error: (err) => {
+            refreshTokenRequest$.error(err);
             authStore.logout();
           },
         }),
         finalize(() => {
           isRefreshing = false;
         }),
-        catchError((err: HttpErrorResponse) => {
-          refreshTokenRequest$.error(err);
-          return throwError(() => error);
-        }),
         switchMap((res) => {
-          refreshTokenRequest$.next(res);
           return addTokenToRequest(request, next, res.token);
         }),
       );
@@ -69,9 +65,6 @@ export const bearerTokenInterceptor: HttpInterceptorFn = (
       return refreshTokenRequest$.pipe(
         filter((x) => !!x),
         take(1),
-        catchError(() => {
-          return throwError(() => error);
-        }),
         switchMap((res) => {
           return addTokenToRequest(request, next, res!.token);
         }),
