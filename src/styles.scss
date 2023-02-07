@@ -1,1 +1,98 @@
-/* You can add global styles to this file, and also import other style files */
+.page-container {
+  padding: 16px;
+  background-color: #fff;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f4f4f4;
+
+    button {
+      margin-left: auto;
+    }
+    nz-input-group {
+      width: 400px;
+    }
+
+    .button-group {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+    }
+  }
+
+  .header-filter-container {
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f4f4f4;
+    margin-bottom: 16px;
+    .header-title {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f4f4f4;
+    }
+    .form-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      width: 600px;
+
+      nz-select,
+      input {
+        width: 400px !important;
+      }
+
+      .range-filer {
+        display: flex;
+        align-items: center;
+        span {
+          margin: 0 8px;
+        }
+        nz-input-number,
+        nz-date-picker {
+          width: 186px !important;
+        }
+      }
+    }
+  }
+
+  .download-btn {
+    margin-bottom: 16px;
+    display: flex;
+    button {
+      margin-left: auto;
+    }
+  }
+
+  form {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+
+    nz-input-number,
+    input,
+    nz-date-picker,
+    nz-select {
+      width: 300px !important;
+    }
+  }
+}
+
+.ml-1 {
+  margin-left: 2px;
+}
+
+.mr-1 {
+  margin-right: 2px;
+}
+
+.ml-2 {
+  margin-left: 4px;
+}
+
+.mr-2 {
+  margin-right: 4px;
+}
