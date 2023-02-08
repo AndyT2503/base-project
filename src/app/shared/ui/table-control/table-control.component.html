@@ -70,33 +70,37 @@
           {{ data[item.key] | percent : item.format }}
         </td>
       </ng-container>
-      <td class="action" *ngIf="tableConfig.showCommand">
-        <ng-container *ngFor="let command of tableConfig.commandConfig">
-          <ng-container *ngIf="!command.hidden || !command.hidden(data)">
-            <a
-              *ngIf="command.haveConfirm; else notConfirm"
-              nz-tooltip
-              nz-button
-              [disabled]="command.disableField && data[command.disableField]"
-              [nzTooltipTitle]="command.tooltip"
-              nz-popconfirm
-              [nzPopconfirmTitle]="command.confirmText"
-              nzPopconfirmPlacement="bottom"
-              (nzOnConfirm)="command.onClick!(data)"
-              ><i nz-icon [nzType]="command.icon" nzTheme="outline"></i
-            ></a>
-            <ng-template #notConfirm>
+      <td *ngIf="tableConfig.showCommand">
+        <div class="action">
+          <ng-container *ngFor="let command of tableConfig.commandConfig">
+            <ng-container *ngIf="!command.hidden || !command.hidden(data)">
               <a
+                *ngIf="command.haveConfirm; else notConfirm"
                 nz-tooltip
                 nz-button
                 [disabled]="command.disableField && data[command.disableField]"
                 [nzTooltipTitle]="command.tooltip"
-                (click)="command.onClick!(data)"
+                nz-popconfirm
+                [nzPopconfirmTitle]="command.confirmText"
+                nzPopconfirmPlacement="bottom"
+                (nzOnConfirm)="command.onClick!(data)"
                 ><i nz-icon [nzType]="command.icon" nzTheme="outline"></i
               ></a>
-            </ng-template>
+              <ng-template #notConfirm>
+                <a
+                  nz-tooltip
+                  nz-button
+                  [disabled]="
+                    command.disableField && data[command.disableField]
+                  "
+                  [nzTooltipTitle]="command.tooltip"
+                  (click)="command.onClick!(data)"
+                  ><i nz-icon [nzType]="command.icon" nzTheme="outline"></i
+                ></a>
+              </ng-template>
+            </ng-container>
           </ng-container>
-        </ng-container>
+        </div>
       </td>
     </tr>
   </tbody>
