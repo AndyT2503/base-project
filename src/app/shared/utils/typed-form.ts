@@ -8,11 +8,11 @@ type NgForm = FormArray | FormGroup | FormControl;
 
 export type TypedFormGroup<
   TFormData extends object,
-  TOmit = object,
-> = TOmit extends Partial<Record<keyof TFormData, NgForm>>
+  TException = object,
+> = TException extends Partial<Record<keyof TFormData, NgForm>>
   ? FormGroup<{
-      [TFormKey in keyof TFormData]: TOmit[TFormKey] extends NgForm
-        ? TOmit[TFormKey]
+      [TFormKey in keyof TFormData]: TException[TFormKey] extends NgForm
+        ? TException[TFormKey]
         : TFormData[TFormKey] extends Date
         ? FormControl<Date>
         : TFormData[TFormKey] extends Array<infer TItem>
