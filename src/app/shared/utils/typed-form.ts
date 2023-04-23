@@ -1,17 +1,16 @@
 import {
+  AbstractControl,
   FormArray,
   FormControl,
-  FormGroup
+  FormGroup,
 } from '@angular/forms';
-
-type NgForm = FormArray | FormGroup | FormControl;
 
 export type TypedFormGroup<
   TFormData extends object,
   TException = object,
-> = TException extends Partial<Record<keyof TFormData, NgForm>>
+> = TException extends Partial<Record<keyof TFormData, AbstractControl>>
   ? FormGroup<{
-      [TFormKey in keyof TFormData]: TException[TFormKey] extends NgForm
+      [TFormKey in keyof TFormData]: TException[TFormKey] extends AbstractControl
         ? TException[TFormKey]
         : TFormData[TFormKey] extends Date
         ? FormControl<Date>
