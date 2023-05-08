@@ -5,15 +5,15 @@ import {
   FormGroup,
 } from '@angular/forms';
 
-type StandardTypedForm<TForm> = TForm extends Date
+type StandardTypedForm<TForm> = [TForm] extends [Date]
   ? FormControl<Date>
-  : TForm extends Array<infer TItem>
+  : [TForm] extends [Array<infer TItem>]
   ? TItem extends Date
     ? FormControl<Date[]>
     : TItem extends object
     ? FormArray<TypedFormGroup<TItem>>
     : FormControl<TItem[]>
-  : TForm extends object
+  : [TForm] extends [object]
   ? TypedFormGroup<TForm>
   : FormControl<TForm>;
 
