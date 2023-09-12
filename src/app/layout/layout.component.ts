@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
@@ -21,7 +21,7 @@ const nzModules = [
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, nzModules, RouterModule],
+  imports: [nzModules, RouterModule, NgFor],
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -33,9 +33,9 @@ export default class LayoutComponent {
   private readonly headerTitleService = inject(HeaderTitleService);
   readonly menuList = MENU_DATA;
 
-  routeTitle$ = this.headerTitleService.currentTitle;
+  routeTitle = this.headerTitleService.currentTitle;
 
-  username$ = this.authStore.username$;
+  user = this.authStore.selectors.user;
 
   logout(): void {
     this.authStore.logout();

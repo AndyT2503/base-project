@@ -1,17 +1,17 @@
-import { Injectable } from "@angular/core";
+import { Injectable, signal } from "@angular/core";
 import { ReplaySubject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class HeaderTitleService {
-  private readonly currentTitle$ = new ReplaySubject<string>(1);
+  private readonly _currentTitle = signal('');
 
   get currentTitle() {
-    return this.currentTitle$.asObservable();
+    return this._currentTitle.asReadonly();
   }
 
   setCurrentTitle(value: string) {
-    this.currentTitle$.next(value);
+    this._currentTitle.set(value);
   }
 }

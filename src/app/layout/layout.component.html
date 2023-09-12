@@ -52,7 +52,7 @@
         [nzDropdownMenu]="menu"
       >
         <nz-avatar nzIcon="user"></nz-avatar>
-        <h3>{{ username$ | async }}</h3>
+        <h3>{{ user()?.username }}</h3>
       </div>
       <nz-dropdown-menu #menu="nzDropdownMenu">
         <ul nz-menu>
@@ -63,7 +63,7 @@
       </nz-dropdown-menu>
     </nz-header>
     <div class="header-title">
-      <h3>{{ routeTitle$ | async }}</h3>
+      <h3>{{ routeTitle() }}</h3>
     </div>
     <nz-content>
       <div class="inner-content">

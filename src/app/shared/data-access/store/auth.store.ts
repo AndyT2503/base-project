@@ -1,13 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  ComponentStore,
   OnStateInit,
   OnStoreInit,
   tapResponse
 } from '@ngrx/component-store';
 import { of, switchMap, tap } from 'rxjs';
 import { StorageKey } from '../../const';
+import { ComponentStoreWithSelectors } from '../../utils';
 import { UserLogin } from '../api/models';
 import { AuthService } from '../api/services';
 import { LocalStorageService } from './local-storage.service';
@@ -29,14 +29,12 @@ const initialAuthState: AuthState = {
 
 @Injectable()
 export class AuthStore
-  extends ComponentStore<AuthState>
+  extends ComponentStoreWithSelectors<AuthState>
   implements OnStoreInit, OnStateInit
 {
   private readonly authService = inject(AuthService);
   private readonly localStorageService = inject(LocalStorageService);
   private readonly router = inject(Router);
-  readonly username$ = this.select((s) => s.user?.username);
-  readonly isAuthenticated$ = this.select((s) => s.isAuthenticated);
   ngrxOnStoreInit() {
     this.setState(initialAuthState);
   }
