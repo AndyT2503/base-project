@@ -20,7 +20,9 @@
       ],
       "rules": {
         "semi": "off",
-        "@typescript-eslint/semi": ["error"],
+        "@typescript-eslint/semi": [
+          "error"
+        ],
         "@angular-eslint/component-selector": [
           "warn",
           {
@@ -42,24 +44,35 @@
           "error",
           {
             "selector": "default",
-            "format": ["camelCase", "snake_case"],
+            "format": [
+              "camelCase",
+              "snake_case"
+            ],
             "leadingUnderscore": "allow",
             "trailingUnderscore": "allow"
           },
-
           {
             "selector": "variable",
-            "format": ["camelCase", "UPPER_CASE", "PascalCase", "snake_case"],
+            "format": [
+              "camelCase",
+              "UPPER_CASE",
+              "PascalCase",
+              "snake_case"
+            ],
             "leadingUnderscore": "allow",
             "trailingUnderscore": "allow"
           },
           {
             "selector": "typeLike",
-            "format": ["PascalCase"]
+            "format": [
+              "PascalCase"
+            ]
           },
           {
             "selector": "enumMember",
-            "format": ["PascalCase"]
+            "format": [
+              "PascalCase"
+            ]
           }
         ],
         "typescript-eslint/quotes": "off",

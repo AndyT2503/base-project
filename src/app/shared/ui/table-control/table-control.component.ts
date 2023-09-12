@@ -3,9 +3,16 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { Observable } from 'rxjs';
 
-import { CommonModule } from '@angular/common';
+import {
+  DatePipe,
+  DecimalPipe,
+  NgClass,
+  NgFor,
+  NgIf,
+  NgTemplateOutlet,
+  PercentPipe,
+} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,6 +20,7 @@ import {
   Input,
   OnInit,
   Output,
+  Signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -29,21 +37,31 @@ const nzModules = [
 @Component({
   selector: 'app-table-control',
   standalone: true,
-  imports: [CommonModule, nzModules, FormsModule],
+  imports: [
+    NgIf,
+    NgFor,
+    nzModules,
+    FormsModule,
+    NgClass,
+    PercentPipe,
+    DecimalPipe,
+    DatePipe,
+    NgTemplateOutlet
+  ],
   templateUrl: './table-control.component.html',
   styleUrls: ['./table-control.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableControlComponent implements OnInit {
-  vm$!: Observable<ViewModel<any>>;
-  @Input() tableConfig!: TableConfig<any>;
+  vm!: Signal<ViewModel<any>>;
+  @Input({ required: true }) tableConfig!: TableConfig<any>;
 
   @Output() search = new EventEmitter<{ [key: string]: any }>();
 
   @Output() queryParamsChange = new EventEmitter<NzTableQueryParams>();
 
   ngOnInit(): void {
-    this.vm$ = this.tableConfig.vm$;
+    this.vm = this.tableConfig.vm;
   }
 
   onQueryParamsChange(queryParams: NzTableQueryParams): void {

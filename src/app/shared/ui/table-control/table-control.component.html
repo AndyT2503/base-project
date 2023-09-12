@@ -2,13 +2,13 @@
   #basicTable
   nzFrontPagination="false"
   nzShowSizeChanger
-  [nzData]="(vm$ | async)?.items!"
-  [nzTotal]="(vm$ | async)?.totalCount!"
-  [nzPageIndex]="(vm$ | async)?.pageIndex!"
-  [nzPageSize]="(vm$ | async)?.pageSize!"
+  [nzData]="vm().items"
+  [nzTotal]="vm().totalCount"
+  [nzPageIndex]="vm().pageIndex"
+  [nzPageSize]="vm().pageSize"
   (nzQueryParams)="onQueryParamsChange($event)"
   [nzScroll]="tableConfig.scrollConfig!"
-  [nzLoading]="(vm$ | async)?.isLoading"
+  [nzLoading]="vm().isLoading"
 >
   <thead>
     <tr>
@@ -24,53 +24,64 @@
           {{ item.label }}
         </th>
       </ng-container>
-      <th nzAlign="center" *ngIf="tableConfig.showCommand">Action</th>
+      <th
+        nzAlign="center"
+        *ngIf="
+          tableConfig.commandConfig && tableConfig.commandConfig.length > 0
+        "
+      >
+        Action
+      </th>
     </tr>
   </thead>
   <tbody>
     <tr
       *ngFor="let data of basicTable.data"
+      (click)="
+        tableConfig.onRowClick &&
+        !(tableConfig.disabledRow && tableConfig.disabledRow(data)) &&
+          tableConfig.onRowClick(data)
+      "
       [ngClass]="{
-        'disable-row': tableConfig.disabledRow && tableConfig.disabledRow(data)
+        'disable-row': tableConfig.disabledRow && tableConfig.disabledRow(data),
+        'row-click':
+          tableConfig.onRowClick &&
+          !(tableConfig.disabledRow && tableConfig.disabledRow(data))
       }"
     >
       <ng-container
         *ngFor="let item of tableConfig.columnConfig; let i = index"
       >
         <td
-          (click)="item.onClick && item.onClick(data)"
-          *ngIf="item.type === 'text'"
+          (click)="item.onCellClick && item.onCellClick(data)"
           [nzAlign]="item.align || null"
-          [ngClass]="{ link: item.onClick }"
+          [ngClass]="{ link: item.onCellClick }"
         >
-          {{ data[item.key] }}
-        </td>
-        <td
-          (click)="item.onClick && item.onClick(data)"
-          *ngIf="item.type === 'date'"
-          [nzAlign]="item.align || null"
-          [ngClass]="{ link: item.onClick }"
-        >
-          {{ data[item.key] | date : item.format }}
-        </td>
-        <td
-          (click)="item.onClick && item.onClick(data)"
-          *ngIf="item.type === 'number'"
-          [nzAlign]="item.align || null"
-          [ngClass]="{ link: item.onClick }"
-        >
-          {{ data[item.key] | number : item.format }}
-        </td>
-        <td
-          (click)="item.onClick && item.onClick(data)"
-          *ngIf="item.type === 'percent'"
-          [nzAlign]="item.align || null"
-          [ngClass]="{ link: item.onClick }"
-        >
-          {{ data[item.key] | percent : item.format }}
+          <ng-container *ngIf="item.type === 'text'">
+            {{ data[item.key] }}
+          </ng-container>
+          <ng-container *ngIf="item.type === 'templateRef'">
+            <ng-container
+              [ngTemplateOutlet]="item.templateRef"
+              [ngTemplateOutletContext]="{ $implicit: data[item.key] }"
+            ></ng-container>
+          </ng-container>
+          <ng-container *ngIf="item.type === 'date'">
+            {{ data[item.key] | date : item.format }}
+          </ng-container>
+          <ng-container *ngIf="item.type === 'number'">
+            {{ data[item.key] | number : item.format }}
+          </ng-container>
+          <ng-container *ngIf="item.type === 'percent'">
+            {{ data[item.key] | percent : item.format }}
+          </ng-container>
         </td>
       </ng-container>
-      <td *ngIf="tableConfig.showCommand">
+      <td
+        *ngIf="
+          tableConfig.commandConfig && tableConfig.commandConfig.length > 0
+        "
+      >
         <div class="action">
           <ng-container *ngFor="let command of tableConfig.commandConfig">
             <ng-container *ngIf="!command.hidden || !command.hidden(data)">
